@@ -19,27 +19,45 @@ def game():
     c=random.choice(cards)
     userScore+=c
     userCards.append(c)
+
+    if userScore > 21:
+        userScore = userScore - 10
+    # accounting for two aces being pulled from the deck
     
     print(f"Your cards: {userCards},Your score={userScore}")
     print(f"Computer's first card: {computerCards}")
     
     while not gameOver:
         wantCard=input("Do you want another card: ")
-        if wantCard=="y":
+        if wantCard==("y" or "yes"):
             c=random.choice(cards)
             userScore+=c
             userCards.append(c)
-        else:
-            while computerScore<17:
-                c=random.choice(cards)
-                computerScore+=c
-                computerCards.append(c)
+
+            if userScore > 21:
+                numberOfCards = len(userCards)
+                i = 0
+                while userScore > 21 and i < numberOfCards:
+                    if userCards[i] == 11:
+                        userCards[i] = 1
+                        userScore = userScore - 10
+                    i += 1
+            # checking to see if the player has an ace and has a score greater than 21
+
+        elif computerScore > userScore:
+            gameOver = True
+        
+        while computerScore < userScore and userScore <= 21:
+            c=random.choice(cards)
+            computerScore+=c
+            computerCards.append(c)
+        
         print(f"Your cards: {userCards}\nYour score={userScore}")
         print(f"Computer's cards: {computerCards}\nComputer's score={computerScore}")
         if userScore>21:
-            print("You loose!")
+            print("You lose!")
             gameOver=True
-        elif wantCard!="y":
+        elif wantCard!=("y" or "yes"):
             if computerScore>21 or userScore>computerScore:
                 print("You Win!")
                 gameOver=True
@@ -47,12 +65,12 @@ def game():
                 print("Draw!")
                 gameOver=True
             else:
-                print("You loose!")
+                print("You lose!")
                 gameOver=True
 
 game()
 playAgain=input("Do you want to play again? ")
-while playAgain=="y":
+while playAgain==("y" or "yes"):
     os.system("cls")
     game()
     playAgain=input("Do you want to play again? ")
